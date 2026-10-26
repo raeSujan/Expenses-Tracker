@@ -1,3 +1,13 @@
 I 2 10 2026 30000 salary
 I 1 10 2026 40000 salary
 E 1 10 2026 -40000 rent
+I 9 10 2026 50000 good sales
+I 9 10 2026 70000 good sales
+I 12 10 2026 10000 commission
+E 11 10 2026 -90000 rent
+E 9 10 2026 -70000 rent
+E 2 10 2026 -50000 rent
+I 13 10 2026 50000 salary
+I 13 10 2026 60000 Tax Fraud
+I 10 10 2026 50000 salary
+E 20 10 2026 -70000 shopping

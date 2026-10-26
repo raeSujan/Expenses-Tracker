@@ -1,17 +1,3 @@
-/* =========================================================
-   PERSONAL EXPENSE TRACKER  -  OOP + raylib GUI
-
-   Build (Linux):
-     g++ main.cpp -o tracker -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-   Build (Windows / MinGW):
-     g++ main.cpp -o tracker.exe -lraylib -lopengl32 -lgdi32 -lwinmm
-   Build (macOS):
-     g++ main.cpp -o tracker -lraylib -framework OpenGL -framework Cocoa -framework IOKit
-
-   Data files (same format as the console version):
-     user.dat, categories.dat, transactions.dat
-   ========================================================= */
-
 #include "raylib.h"
 #include <fstream>
 #include <string>
@@ -21,16 +7,14 @@
 #include <ctime>
 #include <cstdlib>
 #include <cctype>
-#include <algorithm>
+#include <algoithm>
 #include <memory>
+
 using namespace std;
 
 static const int WIN_W = 900;
 static const int WIN_H = 680;
 
-/* ---------------------------------------------------------
-   Theme colours
-   --------------------------------------------------------- */
 namespace Theme
 {
     const Color BG     = {18, 22, 32, 255};
@@ -48,9 +32,6 @@ namespace Theme
     const Color BAD    = {255, 110, 120, 255};
 }
 
-/* ---------------------------------------------------------
-   UI : small text-drawing helpers
-   --------------------------------------------------------- */
 namespace UI
 {
     void Text(const string& s, float x, float y, int size, Color c)
@@ -73,11 +54,6 @@ namespace UI
     }
 }
 
-/* =========================================================
-   MODEL CLASSES  (no screen code in here)
-   ========================================================= */
-
-/* ---------------- InputHelper : validation ---------------- */
 class InputHelper
 {
 public:
@@ -128,7 +104,6 @@ public:
         return d[m - 1];
     }
 
-    // date format: DD/MM/YYYY   (error text goes into 'err')
     static bool validDate(const string& s, int& d, int& m, int& y, string& err)
     {
         if (s.size() != 10 || s[2] != '/' || s[5] != '/')
@@ -168,7 +143,6 @@ public:
         return true;
     }
 
-    // type: 'I' or 'E'. Returns signed amount in 'out'
     static bool parseAmount(const string& s, char type, double& out, string& err)
     {
         if (s.empty())
@@ -217,7 +191,6 @@ public:
         return true;
     }
 
-    // "+123.45" / "-50.00"
     static string money(double v)
     {
         ostringstream o;
@@ -225,7 +198,6 @@ public:
         return o.str();
     }
 
-    // "05/09/2026"
     static string dateText(int d, int m, int y)
     {
         ostringstream o;
@@ -234,13 +206,11 @@ public:
     }
 };
 
-/* ---------------- UserAccount : register / login data ---------------- */
 class UserAccount
 {
 private:
     string userFile;
 
-    // simple hash so the password is not saved as plain text
     static unsigned long hashPassword(const string& s)
     {
         unsigned long h = 5381;
@@ -314,13 +284,12 @@ public:
     }
 };
 
-/* ---------------- Transaction : one income/expense record ---------------- */
 class Transaction
 {
 private:
-    char type;          // 'I' = income, 'E' = expense
+    char type;          
     int day, month, year;
-    double amount;      // income = positive, expense = negative
+    double amount;     
     string category;
 
 public:
@@ -359,7 +328,6 @@ public:
     }
 };
 
-/* ---------------- CategoryManager ---------------- */
 class CategoryManager
 {
 private:
@@ -387,7 +355,6 @@ public:
         return -1;
     }
 
-    // returns false and fills 'err' when the name is not acceptable
     bool add(char type, const string& rawName, string& err)
     {
         string name = InputHelper::trim(rawName);
@@ -439,7 +406,6 @@ public:
     }
 };
 
-/* ---------------- TransactionManager ---------------- */
 class TransactionManager
 {
 private:
@@ -482,7 +448,6 @@ public:
         return total;
     }
 
-    // transactions of the current month, sorted by day
     vector<Transaction> currentMonth() const
     {
         int curM, curY;
@@ -497,8 +462,6 @@ public:
         return list;
     }
 };
-
-/* ---------------- AppContext : shared data + navigation ---------------- */
 enum ScreenId
 {
     SCR_REGISTER, SCR_LOGIN, SCR_MENU, SCR_ADD,
@@ -511,7 +474,7 @@ struct AppContext
     CategoryManager cats;
     TransactionManager trans;
     string currentUser;
-    string notice;          // one-time message shown on the next screen
+    string notice;         
     int nextScreen;
     bool quit;
 
@@ -519,11 +482,7 @@ struct AppContext
     void Go(int id) { nextScreen = id; }
 };
 
-/* =========================================================
-   WIDGET CLASSES
-   ========================================================= */
 
-/* ---------------- Button ---------------- */
 class Button
 {
 private:
@@ -540,7 +499,7 @@ public:
 
     void SetClip(Rectangle c) { clip = c; hasClip = true; }
 
-    // draws the button, returns true on the frame it is clicked
+    
     bool Frame()
     {
         Vector2 m = GetMousePosition();
@@ -562,7 +521,7 @@ public:
     }
 };
 
-/* ---------------- TextBox ---------------- */
+
 class TextBox
 {
 private:
@@ -638,7 +597,7 @@ public:
     }
 };
 
-/* ---------------- Scroller : mouse-wheel scrolling for lists ---------------- */
+
 class Scroller
 {
 private:
@@ -656,7 +615,7 @@ public:
         if (offset > maxOff) offset = maxOff;
         if (offset < 0) offset = 0;
 
-        // scroll bar
+        
         if (contentH > view.height)
         {
             float barH = view.height * (view.height / contentH);
@@ -668,9 +627,6 @@ public:
     }
 };
 
-/* =========================================================
-   SCREEN CLASSES  (each screen = one class)
-   ========================================================= */
 class Screen
 {
 protected:
@@ -681,7 +637,6 @@ protected:
 
     void SetMsg(const string& m, bool ok) { msg = m; msgOk = ok; }
 
-    // updates all text boxes, Tab moves to the next one
     void UpdateFields()
     {
         for (size_t i = 0; i < fields.size(); i++) fields[i]->Update();
@@ -751,7 +706,6 @@ protected:
         return false;
     }
 
-    // Income / Expense tab buttons; returns true when the tab changed
     bool DrawTabs(char& type, float y, const string& incomeLabel, const string& expenseLabel)
     {
         bool changed = false;
@@ -768,10 +722,10 @@ public:
     Screen(AppContext& c) : ctx(c), msgOk(true) {}
     virtual ~Screen() {}
     virtual void OnEnter() {}
-    virtual void Frame() = 0;     // handle input + draw one frame
+    virtual void Frame() = 0;     
 };
 
-/* ---------------- Register ---------------- */
+
 class RegisterScreen : public Screen
 {
 private:
@@ -825,7 +779,6 @@ public:
     }
 };
 
-/* ---------------- Login ---------------- */
 class LoginScreen : public Screen
 {
 private:
@@ -898,7 +851,6 @@ public:
     }
 };
 
-/* ---------------- Main menu ---------------- */
 class MenuScreen : public Screen
 {
 private:
@@ -949,7 +901,6 @@ public:
     }
 };
 
-/* ---------------- Add transaction ---------------- */
 class AddTransactionScreen : public Screen
 {
 private:
@@ -1062,7 +1013,6 @@ public:
     }
 };
 
-/* ---------------- View budget ---------------- */
 class BudgetScreen : public Screen
 {
 private:
@@ -1087,7 +1037,7 @@ public:
     }
 };
 
-/* ---------------- View categories ---------------- */
+
 class ViewCategoriesScreen : public Screen
 {
 private:
@@ -1127,7 +1077,6 @@ public:
     }
 };
 
-/* ---------------- Edit categories (add / remove) ---------------- */
 class EditCategoriesScreen : public Screen
 {
 private:
@@ -1207,7 +1156,6 @@ public:
     }
 };
 
-/* ---------------- Monthly summary ---------------- */
 class MonthlySummaryScreen : public Screen
 {
 private:
@@ -1244,7 +1192,7 @@ public:
             return;
         }
 
-        // table header
+        
         DrawRectangleRounded(Rectangle{60, 150, 780, 34}, 0.3f, 6, Theme::ACCENT);
         UI::Text("#", 75, 157, 18, Theme::TEXT);
         UI::Text("Date", 130, 157, 18, Theme::TEXT);
@@ -1275,9 +1223,6 @@ public:
     }
 };
 
-/* =========================================================
-   App : creates the window, owns all screens, runs the loop
-   ========================================================= */
 class App
 {
 private:
@@ -1302,7 +1247,7 @@ public:
     int Run()
     {
         InitWindow(WIN_W, WIN_H, "Personal Expense Tracker");
-        SetExitKey(KEY_NULL);          // ESC does not close the program
+        SetExitKey(KEY_NULL);         
         SetTargetFPS(60);
 
         current = screens[ctx.account.exists() ? SCR_LOGIN : SCR_REGISTER].get();

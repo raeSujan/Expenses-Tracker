@@ -1,0 +1,2 @@
+g++ Expense_Tracker_OOP.cpp login.cpp -o tracker
+.\tracker.exe
