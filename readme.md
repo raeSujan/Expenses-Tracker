@@ -41,7 +41,7 @@ A desktop **Personal Expense Tracker** written in **C++** with the **raylib** gr
 
 | Register | Login |
 |---|---|
-| ![Register screen](assets/setup.png) | ![Login screen](assets/login.png) |
+| ![Register screen](assets/register.png) | ![Login screen](assets/login.png) |
 
 ### Main Menu
 
@@ -61,7 +61,7 @@ A desktop **Personal Expense Tracker** written in **C++** with the **raylib** gr
 
 | Income categories | Expense categories |
 |---|---|
-| ![View income categories](assets/07-view-income-categories.png) | ![View expense categories](assets/view-expense-categories.png) |
+| ![View income categories](assets/view-income-categories.png) | ![View expense categories](assets/view-expense-categories.png) |
 
 ### Edit Categories
 
