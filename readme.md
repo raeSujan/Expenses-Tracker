@@ -10,7 +10,7 @@ A desktop **Personal Expense Tracker** written in **C++** with the **raylib** gr
 ## Table of Contents
 
 - [Features](#features)
-- [Screenshots](#screenshots)
+- [Screenshots](#assets)
 - [Getting Started](#getting-started)
 - [How to Use](#how-to-use)
 - [Input Rules](#input-rules)
@@ -41,37 +41,37 @@ A desktop **Personal Expense Tracker** written in **C++** with the **raylib** gr
 
 | Register | Login |
 |---|---|
-| ![Register screen](screenshots/01-register.png) | ![Login screen](screenshots/02-login.png) |
+| ![Register screen](assets/setup.png) | ![Login screen](assets/login.png) |
 
 ### Main Menu
 
-![Main menu](screenshots/03-main-menu.png)
+![Main menu](assets/menu.png)
 
 ### Add Transaction
 
 | Income | Expense |
 |---|---|
-| ![Add income](screenshots/04-add-income.png) | ![Add expense](screenshots/05-add-expense.png) |
+| ![Add income](assets/add-income.png) | ![Add expense](assets/add-expense.png) |
 
 ### Total Balance
 
-![Total balance](screenshots/06-total-balance.png)
+![Total balance](assets/total-balance.png)
 
 ### View Categories
 
 | Income categories | Expense categories |
 |---|---|
-| ![View income categories](screenshots/07-view-income-categories.png) | ![View expense categories](screenshots/08-view-expense-categories.png) |
+| ![View income categories](assets/07-view-income-categories.png) | ![View expense categories](assets/view-expense-categories.png) |
 
 ### Edit Categories
 
 | Income categories | Expense categories |
 |---|---|
-| ![Edit income categories](screenshots/09-edit-income-categories.png) | ![Edit expense categories](screenshots/10-edit-expense-categories.png) |
+| ![Edit income categories](assets/edit-income-categories.png) | ![Edit expense categories](assets/edit-expense-categories.png) |
 
 ### Monthly Summary
 
-![Monthly summary](screenshots/11-monthly-summary.png)
+![Monthly summary](assets/monthly-summary.png)
 
 ---
 
